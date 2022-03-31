@@ -1,18 +1,6 @@
 #include <iostream>
 //Дек. Добавление, удаление, и поиск узла.
 
-/*
-size()	Возвращает размер дека
-empty()	Возвращает true, если дек пуста, или false, если непуст
-clear()	Очищает дек
-front()	Возвращает значение первого элемента в деке
-back()	Возвращает значение последнего элемента в деке
-pop_front()	Удаляет первый элемент из дека, не возвращает значение
-pop_back()	Удаляет последний элемент из дека, не возвращает значение
-push_front(elem)	Добавляет новый элемент elem в начало дека
-push_back(elem)	Добавляет новый элемент elem в конец дека
- */
-
 using std::cout;
 using std::endl;
 using std::cin;
@@ -28,21 +16,22 @@ private:
     };
     Node* first;
     Node* last;
+    int dsize = 0;
 public:
     Deque() : first(nullptr), last(nullptr) {}
-
+    //deque<int> d(5); - 0 0 0 0 0
     explicit Deque(int size) : first(nullptr), last(nullptr) {
         for(size_t i = 0; i < size; i++) {
             push_back({});
         }
     }
-
+    //deque<std::string> d(5, "hi"); - hi hi hi hi hi
     Deque(int size, T value) : first(nullptr), last(nullptr) {
         for(size_t i = 0; i < size; i++) {
             push_back(value);
         }
     }
-
+    //deque<int> d = {1, 2, 3, 4, 5};
     Deque(std::initializer_list<T> l) {
         first = new Node(*l.begin());
         last = nullptr;
@@ -51,37 +40,32 @@ public:
         }
     }
 
-    Deque(Node* begin, Node* end) {
-        for(auto i = first; i != last; i->next) {
-            push_back(i->value);
-        }
-    }
-
     //Возвращает размер дека
-    size_t size() {
-        return 5;
+    int size() {
+        return dsize;
     }
-
     //Возвращает true, если дек пуст, или false, если непуст
     bool empty() {
         return first == nullptr;
     }
-    void push_back(T value) {
-        Node* p = new Node(value);
-
-        if(last == nullptr) {
-            first = p;
-            last = p;
-            return;
-        }
-        last->next = p;
-        p->prev = last;
-        last = p;
-        first->prev = last;
-        last->next = first;
+    //Очищает дек
+    void clear() {
+        for(int i = 0; i < dsize; i++) erase(i);
+        first = nullptr;
+        last = nullptr;
     }
+    //Возвращает значение первого элемента в деке
+    T front() {
+        return first->value;
+    }
+    //Возвращает значение последнего элемента в деке
+    T back() {
+        return last->value;
+    }
+    //Добавляет новый элемент элемент в начало дека
     void push_front(T value) {
         Node* p = new Node(value);
+        dsize++;
         if(first == nullptr) {
             first = p;
             last = p;
@@ -90,25 +74,58 @@ public:
         first->prev = p;
         p->next = first;
         first = p;
-        first->prev = last;
-        last->next = first;
     }
-    void print() {
-        if(empty()) {// проверка на пустоту
-            cout << "Элементов нет";
+    //Добавляет новый элемент элемент в конец дека
+    void push_back(T value) {
+        Node* p = new Node(value);
+        dsize++;
+        if(last == nullptr) {
+            first = p;
+            last = p;
             return;
         }
+        last->next = p;
+        p->prev = last;
+        last = p;
+    }
+    //Удаляет первый элемент из дека, не возвращает значение
+    void pop_front() {
+        if(empty()) {
+            return;
+        }
+        dsize--;
+        Node* p = first;
+        first = p->next;
+        delete p;
+    }
+    //Удаляет последний элемент из дека, не возвращает значение
+    void pop_back() {
+        if(empty()) {
+            return;
+        }
+        dsize--;
+        Node* p = last;
+        last = p->prev;
+        delete p;
+    }
+
+    void print() {
+        if(empty()) {
+            return;
+        }
+        cout << endl;
         Node* p = first;
         while(p != last) {
-            cout << p->value << " ";// вывод значения
+            cout << p->value << " ";
             p = p->next;
         }
         cout << p->value;
     }
-    void erase(int index) { // удаление
-        if(empty()) {// проверка
+    void erase(int index) {
+        if(empty()) {
             return;
         }
+        dsize--;
         Node* p = first;
         for(int i = 0; i < index; i++) {
             p = p->next;
@@ -137,7 +154,7 @@ public:
         }
         Node* p = first;
         while(p && p->value != value) {
-            if(p->next == first) { //
+            if(p->next == first) {
                 p = nullptr;
                 break;
             }
@@ -150,21 +167,38 @@ public:
             return nullptr;
         }
     }
-    Node* begin() {
-        return first;
-    }
-    Node* end() {
-        return last;
-    }
-
 };
 
 int main() {
     Deque<int> d = {1, 2, 3, 4, 5};
+    cout << d.size() << endl;
     d.print();
     cout << endl;
-    Deque<int> d2(d.begin(), d.end());
+    Deque<std::string> d2;
+    cout << d2.size() << endl;
+    d2.push_back("1q");
+    d2.push_back("2q");
+    d2.push_back("3q");
+    d2.push_back("4q");
+    d2.push_back("5q");
+    d2.push_back("6q");
     d2.print();
+    d2.pop_back();
+    d2.pop_back();
+    d2.print();
+    d2.push_front("7q");
+    d2.push_front("8q");
+    d2.push_front("9q");
+    d2.print();
+    d2.pop_front();
+    d2.pop_front();
+    d2.print();
+    d2.push_back("7q");
+    d2.push_back("8q");
+    d2.push_back("9q");
+    d2.print();
+    cout << endl << d2.size() << " - size, " << d2.front() << " - first, " << d2.back() << " - last, " << d2.find("3q")->value << " find 9q";
+
     int counter = 100;
 /*
     while (--counter) {
