@@ -58,7 +58,8 @@ public:
     }
     //Очищает дек
     void clear() {
-        for(int i = 0; i < dsize; i++) pop_back();
+        const int size = dsize;
+        for(int i = 0; i < size; i++) pop_back();
         first = nullptr;
         last = nullptr;
     }
