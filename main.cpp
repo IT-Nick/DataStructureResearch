@@ -12,7 +12,7 @@ private:
         T value;
         Node* next;
         Node* prev;
-        Node(T new_value) : value(new_value), next(nullptr), prev(nullptr) {}
+        explicit Node(T new_value) : value(new_value), next(nullptr), prev(nullptr) {}
     };
     Node* first;
     Node* last;
@@ -108,7 +108,7 @@ public:
         last = p->prev;
         delete p;
     }
-
+    //Печатает дек в консоль
     void print() {
         if(empty()) {
             return;
@@ -121,6 +121,7 @@ public:
         }
         cout << p->value;
     }
+    //Удаляет элемент по позиции (индексу) в деке
     void erase(int index) {
         if(empty()) {
             return;
@@ -131,23 +132,20 @@ public:
             p = p->next;
         }
         if(p == first) {
-            first = p->next;
-            delete p;
+            pop_front();
             return;
         }
         if(p == last) {
-            while(p->next != last) p = p->next;
-            p->next = first;
-            delete last;
-            last = p;
+            pop_back();
             return;
         }
-        Node* prevP = p->prev;
-        Node* nextP = p->next;
-        prevP->next = nextP;
-        nextP->prev = prevP;
+        Node* lsn = p->prev;
+        Node* rsn = p->next;
+        lsn->next = rsn;
+        rsn->prev = lsn;
         delete p;
     }
+    //Ищет элемент по значению (возвращает адрес узла)
     Node* find(T value) {
         if(empty()) {
             return nullptr;
@@ -163,7 +161,7 @@ public:
         if(p) {
             return p;
         } else {
-            cout << "Элемент не найден." << endl;
+            cout << "Element does not exist." << endl;
             return nullptr;
         }
     }
