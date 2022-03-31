@@ -1,33 +1,68 @@
 #include <iostream>
-#include <vector>
 //Дек. Добавление, удаление, и поиск узла.
+
+/*
+size()	Возвращает размер дека
+empty()	Возвращает true, если дек пуста, или false, если непуст
+clear()	Очищает дек
+front()	Возвращает значение первого элемента в деке
+back()	Возвращает значение последнего элемента в деке
+pop_front()	Удаляет первый элемент из дека, не возвращает значение
+pop_back()	Удаляет последний элемент из дека, не возвращает значение
+push_front(elem)	Добавляет новый элемент elem в начало дека
+push_back(elem)	Добавляет новый элемент elem в конец дека
+ */
 
 using std::cout;
 using std::endl;
 using std::cin;
 
-struct Node {
-    int value;
-    Node* next;
-    Node* prev;
-    Node(int new_value) {
-        value = new_value;
-        next = nullptr;
-        prev = nullptr;
-    }
-};
-
 template<typename T>
 class Deque {
 private:
+    struct Node {
+        T value;
+        Node* next;
+        Node* prev;
+        Node(T new_value) : value(new_value), next(nullptr), prev(nullptr) {}
+    };
     Node* first;
     Node* last;
 public:
-    Deque() {
-        first = nullptr;
-        last = nullptr;
+    Deque() : first(nullptr), last(nullptr) {}
+
+    explicit Deque(int size) : first(nullptr), last(nullptr) {
+        for(size_t i = 0; i < size; i++) {
+            push_back({});
+        }
     }
 
+    Deque(int size, T value) : first(nullptr), last(nullptr) {
+        for(size_t i = 0; i < size; i++) {
+            push_back(value);
+        }
+    }
+
+    Deque(std::initializer_list<T> l) {
+        first = new Node(*l.begin());
+        last = nullptr;
+        for(size_t i = 0; i < l.size(); i++) {
+            push_back(*(l.begin() + i));
+        }
+    }
+
+    Deque(Node* begin, Node* end) {
+        for(auto i = first; i != last; i->next) {
+            push_back(i->value);
+        }
+    }
+
+    //Возвращает размер дека
+    size_t size() {
+        return 5;
+    }
+
+    //Возвращает true, если дек пуст, или false, если непуст
     bool empty() {
         return first == nullptr;
     }
@@ -115,10 +150,21 @@ public:
             return nullptr;
         }
     }
+    Node* begin() {
+        return first;
+    }
+    Node* end() {
+        return last;
+    }
+
 };
 
 int main() {
-    Deque<int> l;
+    Deque<int> d = {1, 2, 3, 4, 5};
+    d.print();
+    cout << endl;
+    Deque<int> d2(d.begin(), d.end());
+    d2.print();
     int counter = 100;
 /*
     while (--counter) {
