@@ -32,14 +32,22 @@ public:
         }
     }
     //deque<int> d = {1, 2, 3, 4, 5};
-    Deque(std::initializer_list<T> l) {
+    //Закомментировал, в связи с использованием initializer_list<T>
+    /*Deque(std::initializer_list<T> l) {
         first = new Node(*l.begin());
         last = nullptr;
         for(size_t i = 0; i < l.size(); i++) {
             push_back(*(l.begin() + i));
         }
+    }*/
+    //Возвращает значение по индексу
+    T operator[] (int index) {
+        Node* p = first;
+        for(int i = 0; i < index; i++) {
+            p = p->next;
+        }
+        return p->value;
     }
-
     //Возвращает размер дека
     int size() {
         return dsize;
@@ -50,7 +58,7 @@ public:
     }
     //Очищает дек
     void clear() {
-        for(int i = 0; i < dsize; i++) erase(i);
+        for(int i = 0; i < dsize; i++) pop_back();
         first = nullptr;
         last = nullptr;
     }
@@ -93,9 +101,16 @@ public:
         if(empty()) {
             return;
         }
+        if(dsize == 1) {
+            first = nullptr;
+            last = nullptr;
+            dsize--;
+            return;
+        }
         dsize--;
         Node* p = first;
         first = p->next;
+        first->prev = nullptr;
         delete p;
     }
     //Удаляет последний элемент из дека, не возвращает значение
@@ -103,9 +118,16 @@ public:
         if(empty()) {
             return;
         }
+        if(dsize == 1) {
+            first = nullptr;
+            last = nullptr;
+            dsize--;
+            return;
+        }
         dsize--;
         Node* p = last;
         last = p->prev;
+        last->next = nullptr;
         delete p;
     }
     //Печатает дек в консоль
@@ -123,10 +145,10 @@ public:
     }
     //Удаляет элемент по позиции (индексу) в деке
     void erase(int index) {
-        if(empty()) {
+        if(empty() || index > dsize || index < 0) {
+            cout << "Deque is empty or (0 < index > size)" << endl;
             return;
         }
-        dsize--;
         Node* p = first;
         for(int i = 0; i < index; i++) {
             p = p->next;
@@ -143,6 +165,7 @@ public:
         Node* rsn = p->next;
         lsn->next = rsn;
         rsn->prev = lsn;
+        dsize--;
         delete p;
     }
     //Ищет элемент по значению (возвращает адрес узла)
@@ -168,10 +191,7 @@ public:
 };
 
 int main() {
-    Deque<int> d = {1, 2, 3, 4, 5};
-    cout << d.size() << endl;
-    d.print();
-    cout << endl;
+    //Deque<int> d = {1, 2, 3, 4, 5};
     Deque<std::string> d2;
     cout << d2.size() << endl;
     d2.push_back("1q");
@@ -181,22 +201,13 @@ int main() {
     d2.push_back("5q");
     d2.push_back("6q");
     d2.print();
-    d2.pop_back();
-    d2.pop_back();
-    d2.print();
-    d2.push_front("7q");
-    d2.push_front("8q");
-    d2.push_front("9q");
-    d2.print();
-    d2.pop_front();
-    d2.pop_front();
-    d2.print();
-    d2.push_back("7q");
-    d2.push_back("8q");
-    d2.push_back("9q");
-    d2.print();
     cout << endl << d2.size() << " - size, " << d2.front() << " - first, " << d2.back() << " - last, " << d2.find("3q")->value << " find 9q";
-
+    cout << endl << d2[0] << " " << d2[1] << " " << d2[2] << " " << d2[3] << " " << d2[4] << " " << d2[5] << " ";
+    cout << endl << d2.size() << endl;
+    d2.clear();
+    cout << endl << d2.size() << endl;
+    d2.print();
+    //cout << endl << d2.size();
     int counter = 100;
 /*
     while (--counter) {
