@@ -1,0 +1,14 @@
+//
+// Created by lenovo on 02.04.2022.
+//
+
+#ifndef DATASTRUCTURERESEARCH_HASHTABLE_H
+#define DATASTRUCTURERESEARCH_HASHTABLE_H
+
+
+class HashTable {
+
+};
+
+
+#endif //DATASTRUCTURERESEARCH_HASHTABLE_H

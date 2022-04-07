@@ -3,4 +3,4 @@ project(DataStructureResearch)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(DataStructureResearch main.cpp)
+add_executable(DataStructureResearch main.cpp HashTable.cpp HashTable.h)
